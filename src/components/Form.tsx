@@ -1,20 +1,31 @@
-import { useState, Dispatch } from "react";
+import { useState, Dispatch, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { categories } from "../data";
 import { FormDataProps } from "../types";
-import { FormDataActions } from "../reducers/formData-reducer";
+import { FormDataActions, FormDataSate } from "../reducers/formData-reducer";
 
 type FormProps = {
   dispatch: Dispatch<FormDataActions>;
+  state: FormDataSate;
 };
 
-const Form = ({ dispatch }: FormProps) => {
+const Form = ({ dispatch, state }: FormProps) => {
   const [formData, setFormData] = useState<FormDataProps>({
     id: uuidv4(),
     category: 1,
     name: "",
     calories: 0,
   });
+
+  useEffect(() => {
+    if (state.activeId) {
+      const selectActivity = state.formData.filter(
+        item => item.id === state.activeId
+      )[0];
+      console.log(selectActivity);
+      setFormData(selectActivity);
+    }
+  }, [state.activeId]);
 
   const handleChange = (
     e:
